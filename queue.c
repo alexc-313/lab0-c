@@ -133,6 +133,14 @@ int q_size(struct list_head *head)
     return len;
 }
 
+void q_delete_node(element_t *node)
+{
+    list_del(&node->list);
+    if (node->value)
+        free(node->value);
+    free(node);
+}
+
 /* Delete the middle node in queue */
 bool q_delete_mid(struct list_head *head)
 {
@@ -146,10 +154,7 @@ bool q_delete_mid(struct list_head *head)
          fast = fast->next->next, slow = slow->next)
         ;
 
-    element_t *node = list_entry(slow, element_t, list);
-    list_del(slow);
-    free(node->value);
-    free(node);
+    q_delete_node(list_entry(slow, element_t, list));
 
     return true;
 }
@@ -170,14 +175,10 @@ bool q_delete_dup(struct list_head *head)
 
         if (&safe->list != head && strcmp(node->value, safe->value) == 0) {
             found_dup = true;
-            list_del(&node->list);
-            free(node->value);
-            free(node);
+            q_delete_node(node);
         } else if (found_dup) {
             found_dup = false;
-            list_del(&node->list);
-            free(node->value);
-            free(node);
+            q_delete_node(node);
         }
     }
 
