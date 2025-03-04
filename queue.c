@@ -230,35 +230,36 @@ void q_reverseK(struct list_head *head, int k)
     }
 }
 
-/* Merge two lists in ascending order*/
-struct list_head *merge_two(struct list_head *l1,
-                            struct list_head *l2,
+/* Merge two lists in ascending or descending order */
+struct list_head *merge_two(struct list_head *head_1,
+                            struct list_head *head_2,
                             bool descend)
 {
-    struct list_head merged;
-    INIT_LIST_HEAD(&merged);
+    struct list_head head;
+    INIT_LIST_HEAD(&head);
 
-    while (!list_empty(l1) && !list_empty(l2)) {
-        element_t *node_1 = list_first_entry(l1, element_t, list);
-        element_t *node_2 = list_first_entry(l2, element_t, list);
+    while (!list_empty(head_1) && !list_empty(head_2)) {
+        element_t *node_1 = list_first_entry(head_1, element_t, list);
+        element_t *node_2 = list_first_entry(head_2, element_t, list);
 
         if ((descend && strcmp(node_1->value, node_2->value) > 0) ||
             (!descend && strcmp(node_1->value, node_2->value) <= 0)) {
             list_del(&node_1->list);
-            list_add_tail(&node_1->list, &merged);
+            list_add_tail(&node_1->list, &head);
         } else {
             list_del(&node_2->list);
-            list_add_tail(&node_2->list, &merged);
+            list_add_tail(&node_2->list, &head);
         }
     }
 
-    if (!list_empty(l1)) {
-        list_splice(&merged, l1);
-        return l1;
+    if (!list_empty(head_1)) {
+        list_splice_init(&head, head_1);
     } else {
-        list_splice(&merged, l2);
-        return l2;
+        list_splice_init(&head, head_2);
+        list_splice_init(head_2, head_1);
     }
+
+    return head_1;
 }
 
 /* Sort elements of queue in ascending/descending order */
