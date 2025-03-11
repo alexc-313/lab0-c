@@ -35,7 +35,7 @@ class Tracer:
         14: "trace-14-perf",
         15: "trace-15-perf",
         16: "trace-16-perf",
-        #17: "trace-17-complexity"
+        17: "trace-17-complexity"
     }
 
     traceProbs = {
