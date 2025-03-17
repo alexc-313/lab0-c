@@ -23,14 +23,12 @@ void q_free(struct list_head *head)
     if (!head)
         return;
 
-    struct list_head *cur, *safe;
-
-    list_for_each_safe (cur, safe, head) {
-        list_del(cur);
-        element_t *node = list_entry(cur, element_t, list);
+    element_t *node, *safe;
+    list_for_each_entry_safe(node, safe, head, list) {
         free(node->value);
         free(node);
     }
+
     free(head);
 }
 
@@ -127,7 +125,7 @@ int q_size(struct list_head *head)
     int len = 0;
     struct list_head *li;
 
-    list_for_each (li, head)
+    list_for_each(li, head)
         len++;
 
     return len;
@@ -169,7 +167,7 @@ bool q_delete_dup(struct list_head *head)
     bool found_dup = false;
     element_t *node = NULL, *safe = NULL;
 
-    list_for_each_entry_safe (node, safe, head, list) {
+    list_for_each_entry_safe(node, safe, head, list) {
         if (!node->value || !safe->value)
             continue;
 
@@ -205,7 +203,7 @@ void q_reverse(struct list_head *head)
 
     struct list_head *cur, *safe;
 
-    list_for_each_safe (cur, safe, head) {
+    list_for_each_safe(cur, safe, head) {
         list_move(cur, head);
     }
 }
